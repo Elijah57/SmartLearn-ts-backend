@@ -1,5 +1,5 @@
 import { NextFunction, Response, Request } from "express";
-
+import config from "../configs";
 
 class HttpError extends Error {
     statusCode: number;
@@ -60,11 +60,13 @@ class Unauthorized extends HttpError {
   }
 
   const errorHandler = (err: HttpError, req: Request, res: Response, next: NextFunction)=>{
-    const {statusCode, message} = err;
+    const statusCode = err.statusCode || 500;
+    const message = err.message;
     const cleanedMessage = message.replace(/"/g, "")
     res.status(statusCode).json({
         statusCode, 
-        message: cleanedMessage
+        message: cleanedMessage, 
+        stack: config.ENV === "PROD" ? "" : err.stack
     })
   }
 
