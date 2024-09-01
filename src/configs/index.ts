@@ -5,6 +5,7 @@ dotenv.config();
 const config = {
     HOST: process.env.HOST,
     DB_URI: process.env.DB_URI,
+    DB_URI_TEST: process.env.DB_URI_TEST,
     ENV: process.env.ENV,
 
     PORT: Number(process.env.PORT),
