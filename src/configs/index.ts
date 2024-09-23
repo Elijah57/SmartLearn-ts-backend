@@ -19,7 +19,11 @@ const config = {
     SMTP_MAIL: process.env.SMTP_MAIL,
 
     TWILO_SID: process.env.TWILO_SID,
-    TWILO_TOKEN: process.env.TWILO_TOKEN
+    TWILO_TOKEN: process.env.TWILO_TOKEN,
+
+    CLOUD_NAME: process.env.CLOUD_NAME as string,
+    CLOUD_API_KEY: process.env.CLOUD_API_KEY as string,
+    CLOUD_API_SECRET: process.env.CLOUD_API_SECRET as string,
 
 }
 

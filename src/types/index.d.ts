@@ -27,3 +27,11 @@ declare module "express-serve-static-core" {
       user?: InstanceType<typeof User>;
     }
   }
+
+export interface IuploadOptions {
+    folder: string,
+    fileSizeLimit: number,
+    transformation?: object[] | object,
+    allowedTypes: string[],
+    format: string
+}
