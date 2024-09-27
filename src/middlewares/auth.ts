@@ -19,6 +19,7 @@ export async function isLoggedIn(req:Request, res:Response, next:NextFunction){
             return res.status(401).json({message: "Invalid Token"})
         }
 
+        // i had error here with ts and had to modify the type of express Request to accomodate user
         req.user = user;
         next()
 

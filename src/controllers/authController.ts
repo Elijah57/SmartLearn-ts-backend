@@ -41,3 +41,45 @@ export const verifyEmail = async (req:Request, res:Response, next:NextFunction)=
         next(error)
     }
 }
+
+export const sendVerificationMail = async (req: Request, res: Response, next: NextFunction)=>{
+
+    try{
+        const email = req.user.email;
+        const send = await authService.sendVerificationMail(email);
+        res.status(200).json({message: "Verification Mail Sent"})
+
+    }catch(error){
+        next(error)
+    }
+
+}
+
+export const fogotPassword = async (req: Request, res: Response, next: NextFunction)=>{
+
+    try{
+        const email = req.body.email;
+        const send = await authService.fogotPassword(email);
+        res.status(200).json({message: "password reset link sent"})
+
+    }catch(error){
+        next(error)
+    }
+
+}
+
+export const resetPassword = async(req: Request, res:Response, next: NextFunction)=>{
+
+    try{
+        const token = req.query.token as string;
+        const {password} = req.body;
+
+        const payload = {resetToken: token, newPassword: password}
+        const resetMsg = await authService.resetPassword(payload);
+
+        res.status(200).json({status: true, message: resetMsg})
+
+    }catch(error){
+        next(error);
+    }
+}

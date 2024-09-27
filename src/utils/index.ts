@@ -29,3 +29,9 @@ export async function generateVerificationCode(){
   const hashedActivationCode = crypto.createHash("sha256").update(activationCode).digest("hex");
   return {activationCode, hashedActivationCode}
 }
+
+export async function generateResetToken(){
+  const resetToken = crypto.randomBytes(32).toString("hex")
+  const hashedResetToken = crypto.createHash("sha256").update(resetToken).digest("hex");
+  return {resetToken, hashedResetToken}
+}

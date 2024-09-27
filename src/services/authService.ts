@@ -1,7 +1,7 @@
-import { BadRequest, Conflict, HttpError, ResourceNotFound, } from "../middlewares";
+import { BadRequest, Conflict, HttpError, ResourceNotFound, Unauthorized, } from "../middlewares";
 import User from "../models/users"
 import { IAuthLogin, IAuthSignup } from "../types";
-import { comparePassword, generateAccessToken, generateNumericOTP, generateVerificationCode, hashPassword } from "../utils";
+import { comparePassword, generateAccessToken, generateVerificationCode, generateResetToken, hashPassword } from "../utils";
 import sendMail  from "../utils/mail";
 import config from "../configs";
 import * as crypto from "crypto"
@@ -40,7 +40,7 @@ export class AuthService{
 
             const emailData = {
                 user: createUser.firstname,
-                otp: `${config.HOST}/verify-email/?token=${activationCode}`
+                otp: `${config.HOST}/api/auth/verify-email/?token=${activationCode}`
             }
 
             const mailSent = await sendMail({
@@ -56,8 +56,9 @@ export class AuthService{
             console.error('Error during registration:', error);
             if (error instanceof HttpError) {
                 throw error;
+              }else{
+                  throw new HttpError(error.statusCode || 500, error.message || error);
               }
-              throw new HttpError(error.status || 500, error.message || error);
             }
         }
 
@@ -71,7 +72,7 @@ export class AuthService{
                 throw new ResourceNotFound("User does not exists")
             }
 
-            const  isValidPasswd = comparePassword(password, user.password)
+            const  isValidPasswd = await comparePassword(password, user.password);
 
             if (!isValidPasswd){
                 throw new BadRequest("Invalid email or password")
@@ -94,7 +95,10 @@ export class AuthService{
             if (error instanceof HttpError) {
                 throw error;
             }
-            throw new HttpError(error.status || 500, error.message || error);
+            else{
+
+                throw new HttpError(error.statusCode || 500, error.message || error);
+            }
             
         }
     }
@@ -111,11 +115,18 @@ export class AuthService{
                 throw new ResourceNotFound("User does not exist or has been purged. please signup to use smartLearn")
             }
 
+            if(user.otpExpires < (new Date(Date.now()))){
+                throw new Unauthorized("Verification code Expired")
+            }
+
             if(user.emailVerified){
                 throw new Conflict("Email already verified");
             }
 
+
             user.emailVerified = true;
+            user.otp_code = null;
+            user.otpExpires = null
             await user.save()
 
             return {status:true, message: "verification successful"}
@@ -124,13 +135,50 @@ export class AuthService{
             // console.error('Error during registration:', error);
             if (error instanceof HttpError) {
                 throw error;
+            }else{
+
+                throw new HttpError(error.statusCode || 500, error.message || error);
             }
-            throw new HttpError(error.status || 500, error.message || error);
             
         }
 
     }
 
+    public async resetPassword(payload){
+        const {resetToken, newPassword} = payload;
+        const hashedResetToken = crypto.createHash("sha256").update(resetToken).digest("hex");
+        try{
+            const user = await User.findOne({ passwordResetToken: hashedResetToken})
+
+            if(!user){
+                throw new ResourceNotFound("User not found")
+            }
+
+            if(user.passwordResetExpires < (new Date(Date.now()))){
+                throw new Unauthorized("Password Reset link Expired")
+            }
+
+            const hashedpassword = await hashPassword(newPassword)
+            user.password = hashedpassword;
+            user.passwordResetExpires = null;
+            user.passwordResetToken = null;
+            await user.save()
+
+            return {message: "Password successfully reseted"}
+
+
+
+        }catch(error){
+            if (error instanceof HttpError) {
+                throw error;
+            }
+            else{
+
+                throw new HttpError(error.statusCode || 500, error.message || error);
+            }
+            
+        }
+    }
 
     public async sendVerificationMail(payload: string){
 
@@ -153,7 +201,7 @@ export class AuthService{
 
             const emailData = {
                 user: user.firstname,
-                otp: `${config.HOST}/verify-email/?token=${activationCode}`
+                otp: `${config.HOST}/api/auth/verify-email/?token=${activationCode}`
             }
 
             const mailSent = await sendMail({
@@ -171,10 +219,57 @@ export class AuthService{
             if (error instanceof HttpError) {
                 throw error;
               }
-              throw new HttpError(error.status || 500, error.message || error);
+              else{
+
+                  throw new HttpError(error.status || 500, error.message || error);
+              }
             
         }
 
+    }
+
+    public async fogotPassword(payload: string){
+
+        const email = payload;
+
+        try{
+            const user = await User.findOne({email: email})
+
+            if(!user){
+                throw new ResourceNotFound("Email not registered")
+            }
+
+            const {resetToken, hashedResetToken} = await generateResetToken();
+            const tokenExpires = new Date(Date.now() + 10 * 60 * 1000)
+
+            user.passwordResetToken = hashedResetToken;
+            user.passwordResetExpires = tokenExpires;
+            user.save();
+
+            const emailData = {
+                user: user.firstname,
+                resetlink: `${config.HOST}/api/auth/reset-password/?token=${resetToken}`
+            }
+
+            const mailSent = await sendMail({
+                subject: "Password Reset Request",
+                to: user.email,
+                data: emailData,
+                template: "reset-password.ejs"
+            });
+
+            if(!mailSent){
+                throw new HttpError(500, "Failed to send password reset link")
+            }
+
+        }catch(error){
+            if(error instanceof HttpError){
+                throw error;
+            }else{
+
+                throw new HttpError(error.status || 500, error.message || error)
+            }
+        }
     }
     
 }

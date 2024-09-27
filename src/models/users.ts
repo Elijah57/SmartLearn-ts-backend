@@ -12,11 +12,11 @@ const userSchema = new Schema({
         required: true,
         trim: true,
     },
-    phone:{
-        type: String,
-        MaxLength: 15,
+    // phone:{
+    //     type: String,
+    //     MaxLength: 15,
 
-    },
+    // },
     gender: {
         type: String,
         // enum: ["male", "female"],

@@ -8,7 +8,7 @@ const startServer = async () => {
     try {
         await connectDb();
 
-        purgeUnverifiedUsers();
+        // purgeUnverifiedUsers();
      
         app.listen(config.PORT, ()=>{
         console.log("server is running, don't ask for port");

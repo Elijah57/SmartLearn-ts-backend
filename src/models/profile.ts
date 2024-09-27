@@ -14,9 +14,19 @@ const ProfileSchema = new Schema({
             default: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRPKf7bdPa_aOiwGzeNO4YY4YwvAya-Hy8vOUtOFkfi1SD3HDDhjCz7Ux6OqLKNiD3SIxM&usqp=CAU"
         }
     },
-    dob: {
-        type: Date,
-    },
+    // dob: {
+    //     type: Date,
+    // },
+    enrolledCourses: [{
+        type: Schema.Types.ObjectId,
+        ref: "Course"
+
+    }],
+    completedCourses: [{
+        type: Schema.Types.ObjectId,
+        ref: "Course"
+
+    }],
     address: {
         
         city: { type: String, maxLength:  20, description: "The city of residence"},

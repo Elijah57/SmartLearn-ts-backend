@@ -66,7 +66,7 @@ class Unauthorized extends HttpError {
     res.status(statusCode).json({
         statusCode, 
         message: cleanedMessage, 
-        stack: config.ENV === "PROD" ? "" : err.stack
+        // stack: config.ENV === "PROD" ? "" : err.stack
     })
   }
 

@@ -71,9 +71,9 @@
         </div>
         <div class="email-body">
             <p> Hello <%= user %>, </p>
-            <p>Thank you for registering with SmartLearn. To activate your account, here is your verification OTP code as part of SmartLearn Verification process:</p>
+            <p>Thank you for registering with SmartLearn. To activate your account, please click the link below to validate your email as part of SmartLearn Verification process:</p>
           
-            <h3> <%= otp %> </h3>   
+            <button class="button">   <a href= <%= otp %> > Activate Your account</a> </button>
             <br><br>
             <p>This code will expire in the next 10 minutes.</p>
             <!-- <p>Alternatively, copy and paste <%= otp %> into your browser to verify your email</p> -->
