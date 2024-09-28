@@ -43,4 +43,8 @@ export class UserService{
 
         }
     }
+
+    public async EnrollCourse(payload){
+        
+    }
 }
