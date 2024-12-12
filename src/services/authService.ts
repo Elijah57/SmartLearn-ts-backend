@@ -5,14 +5,21 @@ import { comparePassword, generateAccessToken, generateVerificationCode, generat
 import sendMail  from "../utils/mail";
 import config from "../configs";
 import * as crypto from "crypto"
+import handleServiceError from "../utils/handleServiceErrors";
 
 
 
-export class AuthService{
+class AuthService{
+
+    // constructor(){
+    //     Object.getOwnPropertyNames(AuthService.prototype)
+    //     .filter((key)=> typeof this[key] === "function" && this[key] !== "constructor")
+    //     .forEach((key)=> handleServiceError(this[key]))
+    // }
 
     public async signup(payload:IAuthSignup){
 
-        const {firstname, lastname, gender, email, password} = payload;
+        const {firstname, lastname, gender, role, email, password} = payload;
 
         try{
             const userExist = await User.findOne({email})
@@ -29,6 +36,7 @@ export class AuthService{
             user.lastname = lastname;
             user.gender = gender;
             user.email = email;
+            user.roles = role;
             user.password = hashedPassword;
             user.otp_code = hashedActivationCode;
             user.otpExpires = otp_expires
@@ -273,3 +281,8 @@ export class AuthService{
     }
     
 }
+
+
+const authService = new AuthService();
+
+export default authService;

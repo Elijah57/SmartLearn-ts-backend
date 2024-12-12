@@ -3,6 +3,7 @@ import { Request, Response } from "express";
 import authRouter from "./routers/auth";
 import { errorHandler, routeNotFound } from "./middlewares"
 import userRouter from "./routers/user";
+import courseRouter from "./routers/course";
 
 const app = express();
 app.use(express.json())
@@ -15,6 +16,7 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.use("/api", userRouter)
+app.use("/api/course", courseRouter)
 app.use("/api/auth", authRouter)
 
 app.use(routeNotFound);

@@ -6,7 +6,7 @@ import cloudinary from "../utils/cloudinary";
 
 
 
-export class UserService{
+class UserService{
 
     public async UserProfileInit(userId:Types.ObjectId){
 
@@ -37,7 +37,7 @@ export class UserService{
 
             userProfile.user_image.url = url
             userProfile.user_image.public_id = public_id;
-            userProfile.save();
+            await userProfile.save();
 
         }catch(error){
 
@@ -49,3 +49,8 @@ export class UserService{
 
     }
 }
+
+
+const userService = new UserService();
+
+export default userService;
