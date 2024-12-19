@@ -1,25 +1,13 @@
 import multer from "multer";
-import UploaderService from "../services/uploadService";
+import { profileImageUploader, courseThumbnailUploader} from "../services/uploadService";
 import  userService  from "../services/userService";
 import { Request, Response, NextFunction } from "express";
-import cloudinary from "../utils/cloudinary";
-import { ServerError } from "../middlewares";
 
 
 export async function uploadProfileImage(req: Request, res: Response, next: NextFunction){
     const userId = req.user._id;
-    
-    // const profileService = new UserService();
 
-    const uploader = new UploaderService({
-        folder: "profile_images",
-        allowedTypes: ["image/jpg", "image/png", "image/jpeg"],
-        fileSizeLimit: 2 * 1024 * 1024,
-        format: "jpg",
-        transformation: [{ width: 300, height: 200, crop: "fill"}]
-    })
-
-    const upload = uploader.getUploader().single("image")
+    const upload = profileImageUploader.Uploader().single("image")
 
     upload(req, res, (err: any)=>{
         if(err){
@@ -36,13 +24,13 @@ export async function uploadProfileImage(req: Request, res: Response, next: Next
         if(req.file){
 
             const url = req.file.path;
-            const public_id = req.file.filename
-            userService.UpdateUserProfileImage(userId, url, public_id);
+            const publicId = req.file.filename
+            userService.UpdateUserProfileImage(userId, url, publicId);
             
             
             res.status(200).json({
                 message: "File uploaded successfully",
-                public_id: public_id,
+                public_id: publicId,
                 secure_url: req.file.path
             })
         }else{
@@ -53,15 +41,7 @@ export async function uploadProfileImage(req: Request, res: Response, next: Next
 
 export async function uploadCourseThumbnail(req: Request, res: Response, next: NextFunction){
 
-    const uploader = new UploaderService({
-        folder: "course_thumbnails",
-        allowedTypes: ["image/jpg", "image/png", "image/jpeg"],
-        fileSizeLimit: 2 * 1024 * 1024,
-        format: "jpg",
-        transformation: [{ width: 300, height: 200, crop: "fill"}]
-    })
-
-    const upload = uploader.getUploader().single("image")
+    const upload = courseThumbnailUploader.Uploader().single("image")
 
     upload(req, res, (err: any)=>{
         if(err){

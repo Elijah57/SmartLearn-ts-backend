@@ -17,7 +17,7 @@ class CourseService{
             newCourse.description = description;
             newCourse.instructorId = instructorId;
             newCourse.thumbnail.url = secureUrl;
-            newCourse.thumbnail.public_id = publicId;
+            newCourse.thumbnail.publicId = publicId;
     
             let course = await newCourse.save();
             const courseData = course.toObject()
@@ -39,18 +39,8 @@ class CourseService{
         const courseId = payload.courseId;
         const updateFields = {}
 
-        for (let key in payload){
-            if(payload[key] !== undefined){
-                updateFields[key] = payload[key]
-            }
-        }
-
         try{
             const course = await Course.findById(courseId);
-            // const course = await Course.findByIdAndUpdate(courseId, 
-            //     { $set: updateFields},
-            //     {new: true}
-            // )
 
             if(!course){
                 throw new ResourceNotFound("Course not Found");
@@ -78,7 +68,7 @@ class CourseService{
     }
 
     
-    public async updateCourseThumbnail(courseId: Types.ObjectId, url: string, public_id: string){
+    public async updateCourseThumbnail(courseId: Types.ObjectId, url: string, publicId: string){
 
         try{
             const course = await Course.findById(courseId);
@@ -87,12 +77,12 @@ class CourseService{
                 throw new ResourceNotFound("Course not Found");
             }
 
-            const old_image = course.thumbnail.public_id;
+            const old_image = course.thumbnail.publicId;
             cloudinary.uploader.destroy(old_image,()=>{ console.log("Updated")} );
             
 
             course.thumbnail.url = url
-            course.thumbnail.public_id = public_id;
+            course.thumbnail.publicId = publicId;
             await course.save();
         }catch(error){
 

@@ -13,6 +13,7 @@ class UploaderService{
     public transformation: object[] | object;
     public allowedTypes: string[];
     public format: string;
+    public resourceType: string
 
     constructor(options: IuploadOptions){
         this.fileSizeLimit = options.fileSizeLimit;
@@ -20,11 +21,13 @@ class UploaderService{
         this.allowedTypes = options.allowedTypes,
         this.format = options.format;
         this.transformation = options.transformation;
+        this.resourceType = options.resourceType
 
         this.cloudStorage = new CloudinaryStorage({
             cloudinary: cloudinary,
             params: async (req, file)=>{
                 return {
+                    resourceType: this.resourceType,
                     folder: this.folder,
                     format: this.format || "",
                     transformation: this.transformation || ""
@@ -33,7 +36,7 @@ class UploaderService{
         })
     }
 
-    public getUploader(){
+    public Uploader(){
         return multer({
             storage: this.cloudStorage,
             limits: {
@@ -53,4 +56,57 @@ class UploaderService{
     }
 }
 
-export default UploaderService;
+
+
+
+class CourseThumbnailUploader extends UploaderService{
+    constructor(){
+
+        const options: IuploadOptions = {
+            resourceType: "image",
+            fileSizeLimit: 2 * 1024 * 1024, // 5 MB
+            folder: "course-thumbnails",
+            allowedTypes: ["image/jpeg", "image/png", "image/webp", "image/jpg"],
+            format: "webp",
+            transformation: { width: 400, height: 300, crop: "fill" },
+        }
+        super(options);
+        
+    }
+}
+
+class LessonVideoUploader extends UploaderService{
+    constructor(){
+
+        const options: IuploadOptions = {
+            resourceType: "video",
+            fileSizeLimit: 2 * 1024 * 1024, // 5 MB
+            folder: "lessons-video",
+            allowedTypes: ["image/jpeg", "image/png", "image/webp", "image/jpg"],
+            format: "webp",
+            transformation: { width: 400, height: 300, crop: "fill" },
+        }
+        super(options);
+        
+    }
+}
+
+class ProfileImageUploader extends UploaderService{
+    constructor(){
+
+        const options: IuploadOptions = {
+            resourceType: "image",
+            fileSizeLimit: 2 * 1024 * 1024, // 5 MB
+            folder: "profile-images",
+            allowedTypes: ["image/jpeg", "image/png", "image/jpg"],
+            format: "jpg",
+            transformation: { width: 200, height: 200, crop: "fill" },
+        }
+        super(options);
+        
+    }
+}
+
+
+export const profileImageUploader = new ProfileImageUploader();
+export const courseThumbnailUploader = new CourseThumbnailUploader();

@@ -34,7 +34,8 @@ export interface IuploadOptions {
     fileSizeLimit: number,
     transformation?: object[] | object,
     allowedTypes: string[],
-    format: string
+    format: string,
+    resourceType: string
 }
 
 export interface IcreateCourse {

@@ -7,6 +7,6 @@ const courseRouter = Router();
 
 courseRouter.post("/create", isLoggedIn, isInstructor, uploadCourseThumbnail, createCourse)
 courseRouter.put("/update/:courseId", isLoggedIn, isInstructor, updateCourse);
-courseRouter.get("/", isLoggedIn, course)
+courseRouter.get("/:id", isLoggedIn, course)
 
 export default courseRouter

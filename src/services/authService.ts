@@ -13,7 +13,7 @@ class AuthService{
 
     // constructor(){
     //     Object.getOwnPropertyNames(AuthService.prototype)
-    //     .filter((key)=> typeof this[key] === "function" && this[key] !== "constructor")
+    //     .filter((key)=> typeof this[key] === "function" && key !== "constructor")
     //     .forEach((key)=> handleServiceError(this[key]))
     // }
 

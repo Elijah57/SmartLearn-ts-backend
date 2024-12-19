@@ -7,34 +7,48 @@ import { Types } from "mongoose";
 import Course from "../models/course";
 
 
+// export const course = asyncControllerWrapper(async (req: Request, res: Response, next: NextFunction)=>{
+
+//     const page =  Number(req.query.page) || 1;
+//     const limit = Number(req.query.limit) || 10;
+
+//     //extract filter queries
+//     const title = req.query.title;
+//     const description = req.query.description
+//     const search = req.query.search;
+
+//     const offset = (page - 1) * limit;
+//     const endIndex = page * limit;
+
+//     const filterQuery: { [key: string]: any} = {};
+
+//     if(search) { filterQuery.title = {$regex: search, $options: "i"}}
+//     // if (title) { filterQuery.descrip = title}
+
+//     const courses = await Course.find(filterQuery).skip(offset).limit(limit)
+
+
+// //  total document retreive for the query
+//     const totalItems = await Course.countDocuments(filterQuery)
+
+//     return res.status(200).json({
+//         status: true,
+//         courses,
+//         totalItems
+//     })
+// })
+
 export const course = asyncControllerWrapper(async (req: Request, res: Response, next: NextFunction)=>{
 
-    const page =  Number(req.query.page) || 1;
-    const limit = Number(req.query.limit) || 10;
-
-    //extract filter queries
-    const title = req.query.title;
-    const description = req.query.description
-    const search = req.query.search;
-
-    const offset = (page - 1) * limit;
-    const endIndex = page * limit;
-
-    const filterQuery: { [key: string]: any} = {};
-
-    if(search) { filterQuery.title = {$regex: search, $options: "i"}}
-    // if (title) { filterQuery.descrip = title}
-
-    const courses = await Course.find(filterQuery).skip(offset).limit(limit)
-
+    const {id} = req.params;
+    const course = await Course.findById(id)
 
 //  total document retreive for the query
-    const totalItems = await Course.countDocuments(filterQuery)
+    // const totalItems = await Course.countDocuments(filterQue
 
     return res.status(200).json({
         status: true,
-        courses,
-        totalItems
+        course
     })
 })
 

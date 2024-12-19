@@ -24,19 +24,19 @@ class UserService{
         
     }
 
-    public async UpdateUserProfileImage(userId:Types.ObjectId, url: string, public_id: string){
+    public async UpdateUserProfileImage(userId:Types.ObjectId, url: string, publicId: string){
         try{
             const userProfile = await Profile.findOne({user: userId})
 
             if(!userProfile){
                 throw new ResourceNotFound("User does not exists")
             }
-            const old_image = userProfile.user_image.public_id;
-            cloudinary.uploader.destroy(old_image,()=>{ console.log("Updated")} );
+            const oldImage = userProfile.userImage.publicId;
+            cloudinary.uploader.destroy(oldImage,()=>{ console.log("Updated")} );
             
 
-            userProfile.user_image.url = url
-            userProfile.user_image.public_id = public_id;
+            userProfile.userImage.url = url
+            userProfile.userImage.publicId = publicId;
             await userProfile.save();
 
         }catch(error){
