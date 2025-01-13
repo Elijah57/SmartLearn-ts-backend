@@ -3,10 +3,15 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const config = {
+
     HOST: process.env.HOST,
     DB_URI: process.env.DB_URI,
     DB_URI_TEST: process.env.DB_URI_TEST,
     ENV: process.env.ENV,
+
+    clientID: process.env.CLIENT_ID,
+    clientSecret: process.env.CLIENT_SECRET,
+    callbackURL: process.env.CALLBACK_URL,
 
     PORT: Number(process.env.PORT),
     JWT_SECRET: process.env.JWT_SECRET,
