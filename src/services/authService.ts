@@ -31,7 +31,7 @@ class AuthService{
         user.otpExpires = otp_expires
 
         const createUser = await user.save()
-        const {password: _, ...rest} = createUser.toObject();
+        // const {password: _, ...rest} = createUser.toObject();
   
         await emailQueue.add("verification",{
             task: "activate",
@@ -42,7 +42,8 @@ class AuthService{
             otp: `${config.HOST}/api/auth/verify-email/?token=${activationCode}`,
         })
         
-        return rest
+        // return rest
+        return {message: "user created", user: createUser._id}
     }
 
     public async login(payload: IAuthLogin){
@@ -156,7 +157,7 @@ class AuthService{
         user.save();
 
         await emailQueue.add("password-reset", {
-            task: "reset",
+            task: "activate",
             to: user.email,
             subject: "Password Reset Request",
             emailTemplate: "reset-password.ejs",
