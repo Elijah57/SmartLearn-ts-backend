@@ -1,23 +1,17 @@
-import { BadRequest, Conflict, HttpError, ResourceNotFound, Unauthorized, } from "../middlewares";
+import { BadRequest, Conflict, ResourceNotFound, Unauthorized, } from "../middlewares";
 import User from "../models/users"
 import { IAuthLogin, IAuthSignup } from "../types";
 import { comparePassword, generateAccessToken, generateVerificationCode, generateResetToken, hashPassword } from "../utils";
-import sendMail  from "../utils/mail";
 import config from "../configs";
 import * as crypto from "crypto"
-import handleServiceError from "../utils/handleServiceErrors";
 import emailQueue from "../jobs/emailQueue";
-
 
 
 class AuthService{
 
     public async signup(payload:IAuthSignup){
-
-        let start = Date.now()
         const {firstname, lastname, role, email, password} = payload;
 
-        
         const userExist = await User.findOne({email})
         if(userExist){
             throw new Conflict("User already exists") 
@@ -37,30 +31,23 @@ class AuthService{
         user.otpExpires = otp_expires
 
         const createUser = await user.save()
-        console.log(`User created in ${Date.now() - start} ms`)
         const {password: _, ...rest} = createUser.toObject();
-        // console.log(createUser)
-
-        const emailData = {
-            user: createUser.firstname,
-            otp: `${config.HOST}/api/auth/verify-email/?token=${activationCode}`
-        }
-        
-        start = Date.now()
-        const mailSent = await sendMail({
-            subject: "Activate your account",
+  
+        await emailQueue.add("verification",{
+            task: "activate",
             to: user.email,
-            data: emailData,
-            template: "activation.ejs"
-        });
-        console.log(`signup mail sent in ${Date.now() - start} ms`)
-        return { mailSent, newUser: rest}
-    
+            subject: "Activate your account",
+            emailTemplate: "activation.ejs",
+            user: createUser.firstname,
+            otp: `${config.HOST}/api/auth/verify-email/?token=${activationCode}`,
+        })
+        
+        return rest
     }
 
     public async login(payload: IAuthLogin){
-        const { email, password} = payload;
 
+        const { email, password} = payload;
         const user = await User.findOne({email})
 
         if(!user){
@@ -68,18 +55,14 @@ class AuthService{
         }
 
         const  isValidPasswd = await comparePassword(password, user.password);
-
         if (!isValidPasswd){
             throw new BadRequest("Invalid email or password")
-
         }
 
         const user_ = user.toObject()
         const accessToken = generateAccessToken(user_._id, user.role)
         const {password: _, ...userDetails } = user_;
-        // console.log(accessToken, userDetails)
         return {user: userDetails, accessToken}
-
     }
 
     public async verify(payload: string){
@@ -148,25 +131,17 @@ class AuthService{
 
         await user.save();
 
-        const emailData = {
-            user: user.firstname,
-            otp: `${config.HOST}/api/auth/verify-email/?token=${activationCode}`
-        }
-
-        const mailSent = await sendMail({
-            subject: "Activate your account",
+        await emailQueue.add("verification", {
+            task: "activate",
             to: user.email,
-            data: emailData,
-            template: "activation.ejs"
-        });
-
-        if(!mailSent){
-            throw new HttpError(500, "Failed to send verification link")
-        }
+            subject: "Activate your account",
+            emailTemplate: "activation.ejs",
+            user: user.firstname,
+            otp: `${config.HOST}/api/auth/verify-email/?token=${activationCode}`,
+        })
     }
 
     public async fogotPassword(payload: string){
-
         const email = payload;
         const user = await User.findOne({email: email})
 
@@ -176,30 +151,20 @@ class AuthService{
 
         const {resetToken, hashedResetToken} = await generateResetToken();
         const tokenExpires = new Date(Date.now() + 10 * 60 * 1000)
-
         user.passwordResetToken = hashedResetToken;
         user.passwordResetExpires = tokenExpires;
         user.save();
 
-        const emailData = {
-            user: user.firstname,
-            resetlink: `${config.HOST}/api/auth/reset-password/?token=${resetToken}`
-        }
-
-        const mailSent = await sendMail({
-            subject: "Password Reset Request",
+        await emailQueue.add("password-reset", {
+            task: "reset",
             to: user.email,
-            data: emailData,
-            template: "reset-password.ejs"
-        });
-
-        if(!mailSent){
-            throw new HttpError(500, "Failed to send password reset link")
-        }
-    }
-    
+            subject: "Password Reset Request",
+            emailTemplate: "reset-password.ejs",
+            user: user.firstname,
+            link: `${config.HOST}/api/auth/verify-email/?token=${resetToken}`,
+        })
+    } 
 }
-
 
 const authService = new AuthService();
 
