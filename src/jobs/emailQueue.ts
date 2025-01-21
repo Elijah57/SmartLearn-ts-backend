@@ -1,8 +1,7 @@
-import Bull from "bull";
-import { connectRedisClient } from "../configs/redis";
+import {Queue} from "bullmq";
+import connection from "../configs/redis";
 
-const emailQueue = new Bull("smart-queue", {
-    createClient: connectRedisClient
-})
+
+const emailQueue = new Queue("emailQueue", { connection })
 
 export  default emailQueue
