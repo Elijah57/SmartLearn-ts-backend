@@ -1,10 +1,15 @@
 import User from "../models/users";
-// import { Schema} from "mongoose";
+import { Request } from "express";
 import { Types } from "mongoose";
+
+export interface AuthenticatedRequest extends Request{
+    userId: Types.ObjectId,
+    role: string
+}
+
 export interface IAuthSignup {
     firstname: string,
     lastname: string,
-    gender: string,
     role?: any ,
     email: string,
     password: string,
@@ -42,10 +47,16 @@ export interface IcreateCourse {
     title: string,
     courseCode: string,
     description: string,
-    secureUrl: string,
-    publicId: string,
     instructorId?: Types.ObjectId,
 }
+// export interface IcreateCourse {
+//     title: string,
+//     courseCode: string,
+//     description: string,
+//     secureUrl: string,
+//     publicId: string,
+//     instructorId?: Types.ObjectId,
+// }
 
 export interface IupdateCourse {
     title?: string,

@@ -64,9 +64,10 @@ class Unauthorized extends HttpError {
     const message = err.message;
     const cleanedMessage = message.replace(/"/g, "")
     res.status(statusCode).json({
-        statusCode, 
-        message: cleanedMessage, 
-        // stack: config.ENV === "PROD" ? "" : err.stack
+      status: false,
+      statusCode, 
+      message: cleanedMessage, 
+        stack: config.ENV === "PROD" ? "" : err.stack
     })
   }
 

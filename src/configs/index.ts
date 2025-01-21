@@ -9,12 +9,15 @@ const config = {
     DB_URI_TEST: process.env.DB_URI_TEST,
     ENV: process.env.ENV,
 
-    clientID: process.env.CLIENT_ID,
-    clientSecret: process.env.CLIENT_SECRET,
-    callbackURL: process.env.CALLBACK_URL,
+    clientID: process.env.CLIENT_ID as string,
+    clientSecret: process.env.CLIENT_SECRET as string,
+    callbackURL: process.env.CALLBACK_URL as string,
+
+    redisUrl: process.env.REDIS_URL as string,
 
     PORT: Number(process.env.PORT),
     JWT_SECRET: process.env.JWT_SECRET,
+
 
 
     SMTP_HOST: process.env.SMTP_HOST,

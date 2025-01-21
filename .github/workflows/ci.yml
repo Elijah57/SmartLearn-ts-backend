@@ -1,0 +1,55 @@
+name: smartLearn CI
+
+on:
+    push:
+        branches:
+            - main
+            - '*'
+    pull_request:
+        branches: [ main ]
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout Code
+              uses: actions/checkout@v3
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v3
+              with: 
+                node-version: 20
+
+            - name: Install dependencies
+              run: npm ci
+
+            - name: Transpile Typescript to Javascript
+              run: npx tsc
+
+            # - name: Add dist folder
+            #   run: git add -f dist/
+
+            # - name: Commit changes
+            #   run: |
+            #     git config --local user.email "github-actions@github.com"
+            #     git config --local user.name "GitHub Actions"
+            #     git commit -m "Build: Add compiled JavaScript files"
+
+
+            # - name: Push changes
+            #   uses: ad-m/github-push-action@master
+            #   with:
+            #       github_token: ${{ secrets.GITHUB_TOKEN }}
+            #       branch: main # Or your main branch name
+
+            # - name: Upload artifact (optional)
+            #   uses: actions/upload-artifact@v3
+            #   with:
+            #             name: dist
+            #             path: dist/ 
+            
+              env:
+                CI: true
+
+            

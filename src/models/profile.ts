@@ -6,6 +6,11 @@ const ProfileSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: "User"
     },
+    gender: {
+        type: String,
+        // enum: ["male", "female"],
+        // required: true
+    },
 
     userImage : {
         publicId: String,

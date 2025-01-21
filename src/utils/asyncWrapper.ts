@@ -2,10 +2,16 @@ import { Request, Response, NextFunction } from "express"
 
 type MiddlewareFunction = (req: Request, res: Response, next: NextFunction) => Promise<any> | void;
 
-const asyncControllerWrapper = (fn: MiddlewareFunction)=>{
-    return (req: Request, res: Response, next: NextFunction)=>{
-        Promise.resolve(fn(req, res, next)).catch((err)=>next(err))
-    }
+const asyncWrapper = (fn: MiddlewareFunction)=>{
+    return async (req: Request, res: Response, next: NextFunction)=>{
+
+        try{
+            await fn(req, res, next)
+        }catch(err){
+            // console.error("Async error:", err.stack || err.message);
+            next(err)
+        }
+}
 }
 
-export default asyncControllerWrapper;
+export default asyncWrapper;

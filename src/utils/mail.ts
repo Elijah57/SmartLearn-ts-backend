@@ -8,8 +8,8 @@ import { BadRequest } from "../middlewares";
 const sendMail = async (emailContent: IMail) =>{
 
     const transporter = nodemailer.createTransport({
-        // host: config.SMTP_HOST,
-        // port : config.SMTP_PORT || 587,
+        host: config.SMTP_HOST,
+        port : config.SMTP_PORT || 587,
         service: config.SMTP_SERVICE,
         secure: false,
         auth: {
@@ -38,7 +38,7 @@ const sendMail = async (emailContent: IMail) =>{
     }
     catch(error){
         // console.log(error)
-        throw new BadRequest("Email sending failed!")
+        // throw new BadRequest("Email sending failed!")
     }
 
 

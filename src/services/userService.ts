@@ -14,7 +14,7 @@ class UserService{
             const newProfile = new Profile({user:userId });
             await newProfile.save()
 
-            console.log(newProfile)
+            // console.log(newProfile)
             
             return "user profile created";
 

@@ -5,7 +5,9 @@ import { uploadCourseThumbnail } from "../controllers/uploadController";
 
 const courseRouter = Router();
 
-courseRouter.post("/create", isLoggedIn, isInstructor, uploadCourseThumbnail, createCourse)
+
+courseRouter.post("/create", isLoggedIn, isInstructor, createCourse)
+// courseRouter.post("/create", isLoggedIn, isInstructor, uploadCourseThumbnail, createCourse)
 courseRouter.put("/update/:courseId", isLoggedIn, isInstructor, updateCourse);
 courseRouter.get("/:id", isLoggedIn, course)
 

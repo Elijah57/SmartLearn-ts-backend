@@ -4,9 +4,10 @@ import passport from "passport";
 import config from '.';
 
 passport.use(new GoogleStrategy({
+    
     clientID: config.clientID,
     clientSecret: config.clientSecret,
-    callbackUrl: config.callbackURL,
+    callbackURL: config.callbackURL,
     passReqToCallback: true,
     scope: ["email", "profile"]
 },
@@ -16,16 +17,19 @@ async function (request, accessToken, refreshToken, profile, cb){
     console.log(data)
     try{
 
-        let user = await User.find({email: data.email})
+        let user = await User.findOne({email: data.email})
     
         if(!user){
-            const newUser = new User();
-            newUser.firstname = data.given_name
-            newUser.lastname = data.family_name
-    
-        }
+            user = new User();
+            user.firstname = data.given_name
+            user.lastname = data.family_name
+            user.emailVerified = true
+            user.email = data.email
 
-        cb(null, user)
+            await user.save();
+        }
+        console.log(user)
+        return cb(null, user)
     }catch(error){
         cb(error, false)
     }
@@ -33,12 +37,14 @@ async function (request, accessToken, refreshToken, profile, cb){
 ))
 
 // using JWT not session based authentication
-// passport.serializeUser((user, done)=>{
-//     done(null, user)
-// })
+passport.serializeUser((user, done)=>{
+    // console.log(user)
+    done(null, user)
+})
 
-// passport.deserializeUser((user, done) =>{
-//     done(null, user);
-// });
+passport.deserializeUser((id, done) =>{
+    const user = User.findById(id)
+    done(null, user);
+});
 
 export default passport;

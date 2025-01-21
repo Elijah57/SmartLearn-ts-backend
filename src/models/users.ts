@@ -17,11 +17,11 @@ const userSchema = new Schema({
     //     MaxLength: 15,
 
     // },
-    gender: {
-        type: String,
-        // enum: ["male", "female"],
-        required: true
-    },
+    // gender: {
+    //     type: String,
+    //     // enum: ["male", "female"],
+    //     required: true
+    // },
     email : {
         type: String,
         required: true,
@@ -34,7 +34,7 @@ const userSchema = new Schema({
         type: String,
         required: false
     },
-    roles: {
+    role: {
         type: String,
         enum: ["student", "instructor", "admin"],
         default: "student"

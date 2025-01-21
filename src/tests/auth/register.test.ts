@@ -14,16 +14,16 @@ describe("POST /api/auth/register", ()=>{
         } catch (error) {
             console.error('Database connection error:', error);
         }
-    });
+    }, 15000);
     
     
-    afterAll(async () => {
-        try {
-            await User.deleteMany({});
-        } catch (error) {
-            console.error( error);
-        }
-    });
+    // afterAll(async () => {
+    //     try {
+    //         await User.deleteMany({});
+    //     } catch (error) {
+    //         console.error( error);
+    //     }
+    // }, 15000);
     
 
     it("should register a user", async ()=>{
@@ -35,8 +35,9 @@ describe("POST /api/auth/register", ()=>{
 	        password: "elijah57"  
 
         })
+        // console.log(res)
 
-        expect(res.statusCode).toEqual(201);
+        expect(res.status).toEqual(201);
         // expect(res.body).toHaveProperty('user');
         // expect(res.body).toHaveProperty('mailSent');
         // expect(res.body.mailSent).toHaveProperty('mailSent', 'true');

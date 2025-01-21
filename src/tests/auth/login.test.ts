@@ -21,12 +21,12 @@ describe("POST /api/auth/login", ()=>{
 
     it("should login a user", async ()=>{
         const res = await supertest(app).post("/api/auth/login").send({
-	        email: "ecdhjah07@gmail.com",
+	        email: "ecdhjahh07@gmail.com",
 	        password: "elijah57"  
 
         })
 
-        expect (res.statusCode).toEqual(200);
+        expect (res.status).toEqual(200);
         expect (res.body).toHaveProperty("accessToken");
         // expect (response.body.user)
     });

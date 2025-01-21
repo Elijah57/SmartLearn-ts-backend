@@ -6,18 +6,20 @@ import cloudinary from "../utils/cloudinary";
 
 class CourseService{
 
-
     public async createCourse(payload:IcreateCourse){
         try{
-            const {courseCode, title, description, instructorId, secureUrl, publicId} = payload;
+            const {courseCode, title, description, instructorId} = payload;
+            // const {courseCode, title, description, instructorId, secureUrl, publicId} = payload;
     
             const newCourse  = new Course();
             newCourse.title = title;
             newCourse.courseCode = courseCode;
             newCourse.description = description;
             newCourse.instructorId = instructorId;
-            newCourse.thumbnail.url = secureUrl;
-            newCourse.thumbnail.publicId = publicId;
+            newCourse.thumbnail.url = null;
+            // newCourse.thumbnail.url = secureUrl;
+            newCourse.thumbnail.publicId = null;
+            // newCourse.thumbnail.publicId = publicId;
     
             let course = await newCourse.save();
             const courseData = course.toObject()
@@ -49,13 +51,9 @@ class CourseService{
             course.title = payload.title !== undefined ? payload.title : course.title;
             course.description = payload.description !== undefined ? payload.description : course.description;
 
-        
-
             let updatedCourse = await course.save();
             const courseData = updatedCourse.toObject();
             return courseData ;
-
-
 
         }catch(error){
             if(error instanceof HttpError){

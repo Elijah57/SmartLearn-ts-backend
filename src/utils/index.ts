@@ -20,8 +20,8 @@ export const generateNumericOTP = (length: number): string => {
     return otp;
   };
 
-export const generateAccessToken = (userId: Types.ObjectId) =>{
-    return jwt.sign({userId}, config.JWT_SECRET, {expiresIn: "1d"})
+export const generateAccessToken = (userId: Types.ObjectId, role: string) =>{
+    return jwt.sign({userId, role}, config.JWT_SECRET, {expiresIn: "1d"})
 }
 
 export async function generateVerificationCode(){
