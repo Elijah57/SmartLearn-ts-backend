@@ -20,6 +20,11 @@ const config = {
 
 
 
+    REDIS_HOST: process.env.REDIS_HOST,
+    REDIS_PORT: Number(process.env.REDIS_PORT),
+    REDIS_PASS: process.env.REDIS_PASS,
+
+
     SMTP_HOST: process.env.SMTP_HOST,
     SMTP_PORT: Number(process.env.SMTP_PORT),
     SMTP_SERVICE: process.env.SMTP_SERVICE,
