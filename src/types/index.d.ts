@@ -66,3 +66,12 @@ export interface IupdateCourse {
     publicId?: string,
     courseId?: String,
 }
+
+
+export interface Ilogs {
+    level: string,
+    message: string,
+    timestamps?: string,
+    error?: string,
+    endpoint?: string
+}

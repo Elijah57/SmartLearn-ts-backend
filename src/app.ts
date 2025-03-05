@@ -6,7 +6,8 @@ import userRouter from "./routers/user";
 import courseRouter from "./routers/course";
 import cors from "cors";
 import session from "express-session";
-import {redisStore} from "./configs/redis";
+import { RedisStore } from "connect-redis"
+import { redisStoreClient } from "./configs/redis";
 import passport from "./configs/passport-config"
 import googleOauthRouter from "./routers/google";
 
@@ -14,6 +15,11 @@ const app = express();
 app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }));
+app.disable("x-powered-by");
+
+const redisStore = new RedisStore({
+    client: redisStoreClient
+})
 
 app.use(session({
     resave: false,

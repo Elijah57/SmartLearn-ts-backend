@@ -4,7 +4,7 @@ import { IAuthLogin, IAuthSignup } from "../types";
 import { comparePassword, generateAccessToken, generateVerificationCode, generateResetToken, hashPassword } from "../utils";
 import config from "../configs";
 import * as crypto from "crypto"
-import emailQueue from "../jobs/emailQueue";
+import emailQueue from "../queues/emailQueue";
 
 
 class AuthService{
@@ -39,7 +39,7 @@ class AuthService{
             subject: "Activate your account",
             emailTemplate: "activation.ejs",
             user: createUser.firstname,
-            otp: `${config.HOST}/api/auth/verify-email/?token=${activationCode}`,
+            otp: `${config.HOST}/api/auth/verify-email/?token=${activationCode}`, 
         })
         
         // return rest
