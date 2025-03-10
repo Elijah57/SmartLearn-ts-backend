@@ -1,5 +1,4 @@
-import express from "express";
-import { Request, Response } from "express";
+import express, { Request, Response } from "express";
 import authRouter from "./routers/auth";
 import { errorHandler, performanceLogger, routeNotFound } from "./middlewares"
 import userRouter from "./routers/user";
