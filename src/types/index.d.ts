@@ -75,3 +75,10 @@ export interface Ilogs {
     error?: string,
     endpoint?: string
 }
+
+export interface IEmailService {
+    sendWelcomeEmail(data: {}): Promise<void>,
+    sendVerificationEmail(data: {}): Promise<void>,
+    passwordResetEmail(data: {}): Promise<void>,
+    // loginNotificationEmail(data: {}): Promise<void>,
+}

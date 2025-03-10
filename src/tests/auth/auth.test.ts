@@ -1,5 +1,4 @@
 import supertest from "supertest";
-import config from "../../configs";
 import User from "../../models/users";
 import app from "../../app";
 import { redisCacheClient, redisStoreClient} from "../../configs/redis";
@@ -33,9 +32,7 @@ describe("POST test register and login routes", ()=>{
         expect(res.status).toEqual(201);
         expect(res.body).toHaveProperty('userId');
         expect(res.body).toHaveProperty('message');
-       
-
-
+        
     }, 15000);
 
     it("should login a user", async ()=>{
