@@ -5,7 +5,7 @@ import {redisCacheClient} from "../configs/redis";
 const uploadWorker = new Worker("uploadQueue", async (job: any)=>{
     switch(job.task){
         case "profile-image":
-            const {} = job.data
+            // const {} = job.data
     }
 }, {connection: redisCacheClient})
 
