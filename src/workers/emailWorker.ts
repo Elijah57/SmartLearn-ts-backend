@@ -1,4 +1,4 @@
-import sendMail from "../services/emailService";
+import sendMail from "../utils/sendMail";
 import { Worker } from "bullmq";
 import {redisCacheClient} from "../configs/redis";
 import { publishLogs } from "../queues/producers";
@@ -9,8 +9,8 @@ console.log("email worker running")
 const emailWorker = new Worker("emailQueue", async (job: any)=>{
     switch(job.task){
       case "activate":
-        const {to, user, link, emailTemplate, subject} = job.data
-        // console.log(to, user, link, emailTemplate, subject)
+        const {to, user, link, emailTemplate, subject, task} = job.data
+        console.log(to, user, link, emailTemplate, subject, task)
 
         const emailData = {user: user, otp: link}
         const mailSent = await sendMail({
@@ -18,7 +18,8 @@ const emailWorker = new Worker("emailQueue", async (job: any)=>{
           to: to,
           data: emailData,
           template: emailTemplate
-        });        
+        });      
+        console.log(mailSent)  
     }
 }, { connection: redisCacheClient})
 
