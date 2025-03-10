@@ -1,5 +1,4 @@
 import {Redis} from "ioredis"
-import { RedisStore } from "connect-redis"
 import config from "."
 
 

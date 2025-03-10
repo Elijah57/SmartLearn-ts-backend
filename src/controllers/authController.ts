@@ -15,11 +15,8 @@ export const register = asyncWrapper(async  (req:Request, res: Response, next: N
     if(req.body.password == null || req.body.email === null) throw new BadRequest("All fields are required")
     const {message, user} = await authService.signup(req.body)
     await userService.UserProfileInit(user)
-    // const log = {
-    //     level: "info",
-    //     message: `User created: ${user}` as string
-    // }
-    // publishLogs(log)
+    
+    publishLogs({level: "info", message: `User created: ${user}`})
     res.status(201).json({status: true, message, userId: user})
 })
 
@@ -53,7 +50,7 @@ export const verifyEmail = asyncWrapper(async (req:Request, res:Response, next:N
 
 export const sendVerificationMail = asyncWrapper(async (req: Request, res: Response, next: NextFunction)=>{
     const email = req.user.email;
-    const send = await authService.sendVerificationMail(email);
+    await authService.sendVerificationMail(email);
     res.status(200).json({message: "Verification Mail Sent"})
 })
 

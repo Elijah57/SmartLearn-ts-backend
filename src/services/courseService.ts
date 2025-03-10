@@ -39,7 +39,6 @@ class CourseService{
     public async updateCourse(payload: IupdateCourse){
 
         const courseId = payload.courseId;
-        const updateFields = {}
 
         try{
             const course = await Course.findById(courseId);
@@ -48,8 +47,8 @@ class CourseService{
                 throw new ResourceNotFound("Course not Found");
             }
 
-            course.title = payload.title !== undefined ? payload.title : course.title;
-            course.description = payload.description !== undefined ? payload.description : course.description;
+            course.title = payload.title ?? course.title;
+            course.description = payload.description ?? course.description;
 
             let updatedCourse = await course.save();
             const courseData = updatedCourse.toObject();

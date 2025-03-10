@@ -1,7 +1,6 @@
 import { Router } from "express";
 import passport from "passport";
 import asyncWrapper from "../utils/asyncWrapper";
-import User from "../models/users";
 import { generateAccessToken } from "../utils";
 
 
