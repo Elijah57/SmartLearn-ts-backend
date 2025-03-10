@@ -5,9 +5,15 @@ import { comparePassword, generateAccessToken, generateVerificationCode, generat
 import config from "../configs";
 import * as crypto from "crypto"
 import emailQueue from "../queues/emailQueue";
+import { IEmailService } from "../types";
+import { EmailQueueService } from "./emailQueueService";
 
 
 class AuthService{
+    private emailService: IEmailService
+    constructor(emailService: IEmailService){
+        this.emailService = emailService
+    }
 
     public async signup(payload:IAuthSignup){
         const {firstname, lastname, role, email, password} = payload;
@@ -31,16 +37,17 @@ class AuthService{
         user.otpExpires = otp_expires
 
         const createUser = await user.save()
-        // const {password: _, ...rest} = createUser.toObject();
-  
-        await emailQueue.add("verification",{
+        
+        const emailData = {
             task: "activate",
             to: user.email,
             subject: "Activate your account",
             emailTemplate: "activation.ejs",
             user: createUser.firstname,
             otp: `${config.HOST}/api/auth/verify-email/?token=${activationCode}`, 
-        })
+        }
+        
+        this.emailService.sendVerificationEmail(emailData)
         
         // return rest
         return {message: "user created", user: createUser._id}
@@ -105,7 +112,6 @@ class AuthService{
         if(user.passwordResetExpires < (new Date(Date.now()))){
             throw new Unauthorized("Password Reset link Expired")
         }
-
         const hashedpassword = await hashPassword(newPassword)
         user.password = hashedpassword;
         user.passwordResetExpires = null;
@@ -156,17 +162,19 @@ class AuthService{
         user.passwordResetExpires = tokenExpires;
         user.save();
 
-        await emailQueue.add("password-reset", {
+        const emailData = {
             task: "activate",
             to: user.email,
             subject: "Password Reset Request",
             emailTemplate: "reset-password.ejs",
             user: user.firstname,
             link: `${config.HOST}/api/auth/verify-email/?token=${resetToken}`,
-        })
+        }
+        this.emailService.passwordResetEmail(emailData)
     } 
 }
 
-const authService = new AuthService();
+const mailService = new EmailQueueService(emailQueue)
+const authService = new AuthService(mailService);
 
 export default authService;
