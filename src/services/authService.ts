@@ -1,11 +1,10 @@
 import { BadRequest, Conflict, ResourceNotFound, Unauthorized, } from "../middlewares";
 import User from "../models/users"
-import { IAuthLogin, IAuthSignup } from "../types";
+import { IAuthLogin, IAuthSignup, IEmailService } from "../types";
 import { comparePassword, generateAccessToken, generateVerificationCode, generateResetToken, hashPassword } from "../utils";
 import config from "../configs";
 import * as crypto from "crypto"
 import emailQueue from "../queues/emailQueue";
-import { IEmailService } from "../types";
 import { EmailQueueService } from "./emailQueueService";
 
 
