@@ -1,4 +1,7 @@
-# SmartLearn-ts-backend
+# SmartLearn-ts-backend (POC) 🚀🚀🚀
+
+ [![codecov](https://codecov.io/gh/Elijah57/SmartLearn-ts-backend/branch/main/graph/badge.svg?token=8IAKVRS55T)](https://codecov.io/gh/Elijah57/SmartLearn-ts-backend) [![CodeFactor](https://www.codefactor.io/repository/github/Elijah57/SmartLearn-ts-backend/badge)](https://www.codefactor.io/repository/github/Elijah57/SmartLearn-ts-backend) [![Renovate](https://img.shields.io/badge/renovate-enabled-brightgreen.svg)](https://renovatebot.com) [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Elijah57_SmartLearn-ts-backend&metric=alert_status)](https://sonarcloud.io/dashboard?id=Elijah57_SmartLearn-ts-backend) [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=Elijah57_SmartLearn-ts-backend&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=Elijah57_SmartLearn-ts-backend) [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=Elijah57_SmartLearn-ts-backend&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=Elijah57_SmartLearn-ts-backend) [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=Elijah57_SmartLearn-ts-backend&metric=security_rating)](https://sonarcloud.io/dashboard?id=Elijah57_SmartLearn-ts-backend) [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=Elijah57_SmartLearn-ts-backend&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=Elijah57_SmartLearn-ts-backend) [![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=Elijah57_SmartLearn-ts-backend&metric=sqale_index)](https://sonarcloud.io/dashboard?id=Elijah57_SmartLearn-ts-backend) [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=Elijah57_SmartLearn-ts-backend&metric=bugs)](https://sonarcloud.io/dashboard?id=Elijah57_SmartLearn-ts-backend)[![wakatime](https://wakatime.com/badge/user/47f42afb-e1b5-4dff-a121-580939cf1f83/project/277cfbc4-4262-488e-9017-f2fb18135b15.svg)](https://wakatime.com/badge/user/47f42afb-e1b5-4dff-a121-580939cf1f83/project/277cfbc4-4262-488e-9017-f2fb18135b15)
+
 
 Backend for SmartLearn - A Learning Management System with TypeScript support and improved features.
 
@@ -15,11 +18,15 @@ Backend for SmartLearn - A Learning Management System with TypeScript support an
 SmartLearn-ts-backend is a backend service built with Node.js, TypeScript, and MongoDB. It provides RESTful APIs for managing learning resources.
 
 ## Features
-- User authentication and authorization
+- User authentication and authorization (AuthService)
+- Email notifications using nodemailer
+- Background workers (email service, upload) using BullMQ
+- Logging System using RabbitMQ
+- Media content management using Cloudinary
+- Google Oauth (sign-in with google)
 - Course management
 - Lesson management
 - Assignment tracking
-- Real-time notifications
 
 ## Installation
 1. Clone the repo:
@@ -36,9 +43,36 @@ SmartLearn-ts-backend is a backend service built with Node.js, TypeScript, and M
 3. Set up environment variables:
    Create a `.env` file in the root directory and add the following:
    ```env
-   PORT=3000
-   MONGODB_URI=your_mongodb_connection_string
+   
+   PORT = 4000
+   ENV = "DEV"
+   HOST = "http://localhost:4000"
+   DB_URI=your_mongodb_connection_string
+   DB_URI_LOCAL= "mongodb://root:mongodb@localhost:27017/smart-learn?authSource=admin"
+   
    JWT_SECRET=your_jwt_secret
+
+   SMTP_MAIL=google_mail
+   SMTP_PASS=google_app_password
+   SMTP_HOST = "smtp.gmail.com"
+   SMTP_PORT = 465
+   SMTP_SERVICE = "gmail"
+
+   REDIS_SESSION_URL="redis://localhost:6370"
+   REDIS_CACHE_URL="redis://localhost:6350"
+
+   RABBITMQ_URL=rabbitMq_url
+   SESSION_SECRET=
+
+   CLOUD_NAME=cloudinary_name
+   CLOUD_API_KEY=cloudinary_api_key
+   CLOUD_API_SECRET=cloudinary_secret
+
+   CLIENT_ID=your_google_client_id_for_oauth
+   CLIENT_SECRET=your-google_client_secret 
+   CALLBACK_URL=oauth_callback_url
+
+   OPEN_API_KEY=your_openaikey
    ```
 
 4. Start the server:
@@ -47,17 +81,18 @@ SmartLearn-ts-backend is a backend service built with Node.js, TypeScript, and M
    ```
 
 ## Usage
-To start using the API, send requests to `http://localhost:3000/api`.
+To start using the API, send requests to `http://localhost:4000/api`.
 
-## API Endpoints
+## API Endpoints (available)
 - `POST /api/auth/register` - Register a new user
 - `POST /api/auth/login` - Login a user
+- `GET /api/auth/verify-email` - Verify User Email
+- `GET/api/auth/send-verification-link` - Send email verification link
+- `GET/api/auth/forgot-password` - Send reset password link
+- `GET/api/auth/reset-password` - Reset users password
+
 - `GET /api/courses` - Get all courses
 - `POST /api/courses` - Create a new course
-- `GET /api/lessons` - Get all lessons
-- `POST /api/lessons` - Create a new lesson
-- `GET /api/assignments` - Get all assignments
-- `POST /api/assignments` - Create a new assignment
 
 ## Contributing
 We welcome contributions! Please follow these steps to contribute:
