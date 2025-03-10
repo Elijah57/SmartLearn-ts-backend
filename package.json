@@ -5,8 +5,10 @@
    "main": "index.js",
    "scripts": {
       "test": "npx jest --detectOpenHandles",
+      "worker:email": "ts-node src/workers/emailWorker.ts",
       "start": "ts-node src/index.ts",
-      "dev": "npx nodemon"
+      "dev": "npx nodemon",
+      "build": "npx tsc"
    },
    "author": "Elijah Echekwu",
    "license": "ISC",
