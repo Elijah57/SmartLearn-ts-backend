@@ -8,6 +8,7 @@ Backend for SmartLearn - A Learning Management System with TypeScript support an
 ## Table of Contents
 - [Introduction](#introduction)
 - [Features](#features)
+- [Prerequisite](#prerequisite)
 - [Installation](#installation)
 - [Usage](#usage)
 - [API Endpoints](#api-endpoints)
@@ -27,6 +28,19 @@ SmartLearn-ts-backend is a backend service built with Node.js, TypeScript, and M
 - Course management
 - Lesson management
 - Assignment tracking
+
+## Prerequisite
+
+1. Cloudinary: Cloudinary is a powerful media API for websites and mobile apps alike, Cloudinary enables developers to efficiently manage, transform, optimize, and deliver images and videos through multiple CDNs. 
+Go to cloudinary, create an account and store your credential in the .env file
+
+2. Nodemailer setup with gmail and app password: Nodemailer is a module for Node.js applications that allows easy email sending. This setup uses gmail as a transport service. using gmail as a transport expects an actual user, so go over to your google account, ensure 2fa is setup for your account, create an app password, for nodemailer to work, store the app password in SMTP_PASS. You may refer to this [guide](https://medium.com/@elijahechekwu/sending-emails-in-node-express-js-with-nodemailer-gmail-part-1-67b7da4ae04b)
+
+3. EmailQueueService: To handle sending of email off the main application thread of the server, An EmailQueueService is setup, using Bullmq(a Redis-backed queue system). On email transmission, the EmailQueueService, enqueue the a mesage containing the email payload. An EmailWorker process (seperate node.js process) runs independently, subscribed to the BullMQ email queue and listens for new queues added to the email queue, on reception performs sending of emails. You may refer to this [guide](https://medium.com/@elijahechekwu/setting-up-bull-to-handle-asynchronous-tasks-in-node-js-part-2-70c57c694e3b)
+
+4. Google Sign-in using passport.js: Google APIs are application programming interfaces developed by Google which allow communication with Google Services and their integration to other services.The authentication process of this application utilizes a self hosted AuthService and Google Strategy.
+In order for Google to identify which application's Passport interacts with their API, you will need to obtain clientID and clientSecret in Google Developers Console. You may refer to this [guide](https://medium.com/@elijahechekwu/social-authentication-authorization-in-node-express-js-application-using-passportjs-part-1-db7fa622ea60) for the steps.
+
 
 ## Installation
 1. Clone the repo:
