@@ -50,7 +50,7 @@ export const verifyEmail = asyncWrapper(async (req:Request, res:Response, next:N
 
 export const sendVerificationMail = asyncWrapper(async (req: Request, res: Response, next: NextFunction)=>{
     const email = req.user.email;
-    const send = await authService.sendVerificationMail(email);
+    await authService.sendVerificationMail(email);
     res.status(200).json({message: "Verification Mail Sent"})
 })
 
