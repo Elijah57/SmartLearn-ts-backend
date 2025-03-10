@@ -1,6 +1,6 @@
 import app from "./app"
 import config from "./configs";
-import purgeUnverifiedUsers from "./models/cron";
+// import purgeUnverifiedUsers from "./models/cron";
 import connectDb from "./configs/db";
 // import log from "./utils/logger";
 import { publishLogs } from "./queues/producers";
