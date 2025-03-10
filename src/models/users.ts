@@ -61,8 +61,8 @@ const userSchema = new Schema({
 }
 );
 
-
-
+// userSchema.index({ _id: 1})
+// userSchema.index({ email: 1})
 
 const User = model("User", userSchema);
 

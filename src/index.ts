@@ -1,8 +1,10 @@
 import app from "./app"
 import config from "./configs";
-import purgeUnverifiedUsers from "./models/cron";
-import connectDb from "./utils/db";
+// import purgeUnverifiedUsers from "./models/cron";
+import connectDb from "./configs/db";
 // import log from "./utils/logger";
+import { publishLogs } from "./queues/producers";
+
 
 const startServer = async () => {
     try {
@@ -16,6 +18,7 @@ const startServer = async () => {
     })
     } catch (error) {
       console.error("Error connecting to the database", error);
+      
     }
   };
    

@@ -1,4 +1,4 @@
-name: smartLearn CI
+name: smartLearn CI - test
 
 on:
     push:
@@ -19,13 +19,13 @@ jobs:
             - name: Setup Node.js
               uses: actions/setup-node@v3
               with: 
-                node-version: 20
+                node-version: 22.13.1
 
             - name: Install dependencies
               run: npm ci
 
-            - name: Transpile Typescript to Javascript
-              run: npx tsc
+            - name: Run Tests
+              run: npm run test
 
             # - name: Add dist folder
             #   run: git add -f dist/

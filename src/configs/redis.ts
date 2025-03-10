@@ -2,12 +2,16 @@ import {Redis} from "ioredis"
 import { RedisStore } from "connect-redis"
 import config from "."
 
-export const connectRedisClient = ()=>{
-    return new Redis(config.redisUrl)
+
+const connectRedisClient = (url:any, type: string) : Redis=>{
+    try{
+        const conn = new Redis(url, {maxRetriesPerRequest: null})
+        console.log(`connected to redis -${type}`)
+        return conn
+    }catch(err){
+        console.log("Error: could not connect to database", err)
+    }
 }
 
-let redisClient = connectRedisClient();
-
-export const redisStore = new RedisStore({
-    client: redisClient
-})
+export const redisCacheClient = connectRedisClient(config.redisCacheUrl, "cache")
+export const redisStoreClient = connectRedisClient(config.redisSessionUrl, "session")

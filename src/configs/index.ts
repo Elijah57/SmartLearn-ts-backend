@@ -6,6 +6,8 @@ const config = {
 
     HOST: process.env.HOST,
     DB_URI: process.env.DB_URI,
+    DB_URI_LOCAL: process.env.DB_URI_LOCAL,
+    testDbUri: process.env.DB_URI_LOCAL_TEST,
     DB_URI_TEST: process.env.DB_URI_TEST,
     ENV: process.env.ENV,
 
@@ -20,6 +22,10 @@ const config = {
 
 
 
+    redisCacheUrl: process.env.REDIS_CACHE_URL,
+    redisSessionUrl: process.env.REDIS_SESSION_URL,
+
+
     SMTP_HOST: process.env.SMTP_HOST,
     SMTP_PORT: Number(process.env.SMTP_PORT),
     SMTP_SERVICE: process.env.SMTP_SERVICE,
@@ -32,6 +38,8 @@ const config = {
     CLOUD_NAME: process.env.CLOUD_NAME as string,
     CLOUD_API_KEY: process.env.CLOUD_API_KEY as string,
     CLOUD_API_SECRET: process.env.CLOUD_API_SECRET as string,
+
+    RABBITMQ_URL: process.env.RABBITMQ_URL as string
 
 }
 
