@@ -9,7 +9,7 @@ import { EmailQueueService } from "./emailQueueService";
 
 
 class AuthService{
-    private emailService: IEmailService
+    private readonly emailService: IEmailService
     constructor(emailService: IEmailService){
         this.emailService = emailService
     }
